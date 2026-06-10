@@ -1,5 +1,6 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import {
   ArrowLeft,
   Share2,
@@ -7,25 +8,38 @@ import {
   Pencil,
   Plus,
   Clock,
+  Check,
 } from "lucide-react";
 import { TopNav } from "@/components/vault/TopNav";
 import { MasonryItem } from "@/components/vault/MasonryItem";
-import { getBoard, boards } from "@/lib/boards-data";
+import { getBoard } from "@/lib/boards-data";
+import {
+  getMergedBoard,
+  getMergedBoards,
+  useVault,
+  deleteItem,
+  updateBoardMeta,
+} from "@/lib/vault-store";
+import { Fab } from "@/components/vault/Fab";
+import { AddItemModal, type AddMode } from "@/components/vault/AddItemModal";
+import type { BoardCardContent } from "@/lib/boards-data";
 
 export const Route = createFileRoute("/board/$boardId")({
   loader: ({ params }) => {
     const board = getBoard(params.boardId);
-    if (!board) throw notFound();
-    return { board };
+    // user boards aren't known during SSR loader; allow component to resolve
+    return { board: board ?? null, boardId: params.boardId };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.board.title} — VibeVault` },
-          { name: "description", content: loaderData.board.description },
-          { property: "og:title", content: `${loaderData.board.title} — VibeVault` },
-          { property: "og:description", content: loaderData.board.description },
-          { property: "og:image", content: loaderData.board.covers[0] },
+          { title: `${loaderData.board?.title ?? "Board"} — VibeVault` },
+          { name: "description", content: loaderData.board?.description ?? "A mood board on VibeVault." },
+          { property: "og:title", content: `${loaderData.board?.title ?? "Board"} — VibeVault` },
+          { property: "og:description", content: loaderData.board?.description ?? "A mood board on VibeVault." },
+          ...(loaderData.board?.covers?.[0]
+            ? [{ property: "og:image", content: loaderData.board.covers[0] }]
+            : []),
         ]
       : [{ title: "Board — VibeVault" }],
   }),
@@ -44,7 +58,52 @@ export const Route = createFileRoute("/board/$boardId")({
 });
 
 function BoardWorkspace() {
-  const { board } = Route.useLoaderData() as { board: import("@/lib/boards-data").Board };
+  useVault();
+  const { boardId } = Route.useLoaderData() as { boardId: string };
+  const board = getMergedBoard(boardId);
+
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
+  const [addMode, setAddMode] = useState<AddMode>("image");
+  const [editingItem, setEditingItem] = useState<BoardCardContent | null>(null);
+
+  if (!board) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background px-6 text-center">
+        <div>
+          <h1 className="font-display text-4xl">Board not found</h1>
+          <p className="mt-3 text-muted-foreground">This vault doesn't exist yet.</p>
+          <Link to="/" className="mt-6 inline-block rounded-full bg-foreground px-5 py-2 text-sm text-background">
+            Back to dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const startEditTitle = () => {
+    setTitleDraft(board.title);
+    setEditingTitle(true);
+  };
+  const commitTitle = () => {
+    if (titleDraft.trim() && titleDraft.trim() !== board.title) {
+      updateBoardMeta(board.id, { title: titleDraft.trim() });
+    }
+    setEditingTitle(false);
+  };
+
+  const openAdd = (mode: AddMode) => {
+    setEditingItem(null);
+    setAddMode(mode);
+    setAddOpen(true);
+  };
+  const openEdit = (item: BoardCardContent) => {
+    if (!item.id) return;
+    setEditingItem(item);
+    setAddMode(item.type === "image" ? "image" : item.type === "link" ? "link" : "note");
+    setAddOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,7 +131,10 @@ function BoardWorkspace() {
             <button className="hidden items-center gap-1.5 rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-xs font-medium text-foreground transition hover:bg-card sm:inline-flex">
               <Download className="h-3.5 w-3.5" /> Download
             </button>
-            <button className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background shadow-soft transition hover:bg-foreground/90">
+            <button
+              onClick={() => openAdd("image")}
+              className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background shadow-soft transition hover:bg-foreground/90"
+            >
               <Plus className="h-3.5 w-3.5" /> Add
             </button>
           </div>
@@ -90,15 +152,41 @@ function BoardWorkspace() {
             Mood Board
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-4xl tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              {board.title}
-            </h1>
-            <button
-              aria-label="Edit title"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border/70 bg-card/60 text-muted-foreground transition hover:text-foreground"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-            </button>
+            {editingTitle ? (
+              <>
+                <input
+                  autoFocus
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.target.value)}
+                  onBlur={commitTitle}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") commitTitle();
+                    if (e.key === "Escape") setEditingTitle(false);
+                  }}
+                  className="w-full max-w-2xl rounded-2xl border border-primary/40 bg-card/80 px-3 py-1.5 font-display text-4xl tracking-tight text-foreground outline-none ring-4 ring-primary/15 sm:text-5xl md:text-6xl"
+                />
+                <button
+                  aria-label="Save title"
+                  onClick={commitTitle}
+                  className="grid h-9 w-9 place-items-center rounded-full bg-foreground text-background transition hover:bg-foreground/90"
+                >
+                  <Check className="h-3.5 w-3.5" />
+                </button>
+              </>
+            ) : (
+              <>
+                <h1 className="break-words font-display text-4xl tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                  {board.title}
+                </h1>
+                <button
+                  aria-label="Edit title"
+                  onClick={startEditTitle}
+                  className="grid h-9 w-9 place-items-center rounded-full border border-border/70 bg-card/60 text-muted-foreground transition hover:text-foreground"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+              </>
+            )}
           </div>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             {board.description}
@@ -153,11 +241,62 @@ function BoardWorkspace() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
-        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
-          {board.items.map((item, i) => (
-            <MasonryItem key={i} item={item} index={i} />
-          ))}
-        </div>
+        {board.items.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass mx-auto grid max-w-xl place-items-center rounded-3xl px-8 py-20 text-center shadow-soft"
+          >
+            <div className="grid h-14 w-14 place-items-center rounded-full bg-secondary/60">
+              <Plus className="h-6 w-6 text-foreground" />
+            </div>
+            <p className="mt-5 font-display text-2xl text-foreground">
+              No inspiration added yet.
+            </p>
+            <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+              Start with an image, a note, or a link. Your board will come to life with every piece you add.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <button
+                onClick={() => openAdd("image")}
+                className="rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background shadow-soft transition hover:bg-foreground/90"
+              >
+                Add image
+              </button>
+              <button
+                onClick={() => openAdd("note")}
+                className="rounded-full border border-border/70 bg-card/60 px-4 py-2 text-xs font-medium text-foreground transition hover:bg-card"
+              >
+                Add note
+              </button>
+              <button
+                onClick={() => openAdd("link")}
+                className="rounded-full border border-border/70 bg-card/60 px-4 py-2 text-xs font-medium text-foreground transition hover:bg-card"
+              >
+                Add link
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
+            <AnimatePresence>
+              {board.items.map((item, i) => {
+                const editable = !!item.id;
+                return (
+                  <MasonryItem
+                    key={item.id ?? `${item.type}-${i}`}
+                    item={item}
+                    index={i}
+                    onEdit={editable ? () => openEdit(item) : undefined}
+                    onDelete={
+                      editable ? () => deleteItem(board.id, item.id!) : undefined
+                    }
+                  />
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
@@ -165,7 +304,7 @@ function BoardWorkspace() {
           More from your vault
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {boards
+          {getMergedBoards()
             .filter((b) => b.id !== board.id)
             .slice(0, 5)
             .map((b) => (
@@ -190,6 +329,18 @@ function BoardWorkspace() {
             ))}
         </div>
       </section>
+
+      <Fab onPick={openAdd} />
+      <AddItemModal
+        open={addOpen}
+        mode={addMode}
+        boardId={board.id}
+        onClose={() => {
+          setAddOpen(false);
+          setEditingItem(null);
+        }}
+        editItem={editingItem ?? undefined}
+      />
     </div>
   );
 }

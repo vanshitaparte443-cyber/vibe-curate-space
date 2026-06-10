@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Plus, Sparkles, ArrowUpRight } from "lucide-react";
+import { useMemo, useState } from "react";
 import { TopNav } from "@/components/vault/TopNav";
 import { BoardCard } from "@/components/vault/BoardCard";
-import { boards } from "@/lib/boards-data";
+import { CreateBoardModal } from "@/components/vault/CreateBoardModal";
+import { getMergedBoards, useVault } from "@/lib/vault-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,9 +19,22 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const categories = ["All", "Interiors", "Fashion", "Study", "Travel", "Branding", "Cafe"];
+const categories = ["All", "Interior", "Fashion", "Study", "Travel", "Branding", "Personal"];
 
 function Dashboard() {
+  useVault();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [active, setActive] = useState("All");
+  const allBoards = getMergedBoards();
+
+  const filtered = useMemo(() => {
+    if (active === "All") return allBoards;
+    const q = active.toLowerCase();
+    return allBoards.filter((b) =>
+      b.tags.some((t) => t.toLowerCase().includes(q)),
+    );
+  }, [active, allBoards]);
+
   return (
     <div className="min-h-screen bg-background">
       <TopNav />
@@ -63,6 +78,7 @@ function Dashboard() {
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => setModalOpen(true)}
                 className="group inline-flex h-12 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background shadow-lift transition-colors hover:bg-foreground/90"
               >
                 <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
@@ -82,16 +98,17 @@ function Dashboard() {
           <div>
             <h2 className="font-display text-3xl text-foreground sm:text-4xl">Your boards</h2>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Six curated spaces. Open one to step inside.
+              {allBoards.length} curated spaces. Open one to step inside.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {categories.map((c, i) => (
+            {categories.map((c) => (
               <button
                 key={c}
+                onClick={() => setActive(c)}
                 className={
                   "rounded-full px-3.5 py-1.5 text-xs font-medium transition " +
-                  (i === 0
+                  (active === c
                     ? "bg-foreground text-background shadow-soft"
                     : "border border-border/70 bg-card/50 text-muted-foreground hover:text-foreground")
                 }
@@ -102,11 +119,31 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {boards.map((b, i) => (
-            <BoardCard key={b.id} board={b} index={i} />
-          ))}
-        </div>
+        {filtered.length === 0 ? (
+          <div className="glass mx-auto grid max-w-xl place-items-center rounded-3xl px-8 py-16 text-center shadow-soft">
+            <p className="font-display text-2xl text-foreground">Nothing here yet</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              No boards match {active}. Try another category, or start a new vault.
+            </p>
+            <button
+              onClick={() => setModalOpen(true)}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-lift transition hover:bg-foreground/90"
+            >
+              <Plus className="h-4 w-4" /> Create a board
+            </button>
+          </div>
+        ) : (
+          <motion.div
+            layout
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <AnimatePresence mode="popLayout">
+              {filtered.map((b, i) => (
+                <BoardCard key={b.id} board={b} index={i} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
       </section>
 
       <footer className="border-t border-border/60 bg-card/40">
@@ -115,6 +152,8 @@ function Dashboard() {
           <p>Designed for the quiet collectors of beautiful things.</p>
         </div>
       </footer>
+
+      <CreateBoardModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

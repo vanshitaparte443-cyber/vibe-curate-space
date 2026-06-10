@@ -1,7 +1,22 @@
 export type BoardCardContent =
-  | { type: "image"; src: string; caption?: string; alt: string; height: number }
-  | { type: "quote"; text: string; author?: string }
-  | { type: "note"; title: string; body: string };
+  | { id?: string; type: "image"; src: string; caption?: string; alt: string; height: number }
+  | { id?: string; type: "quote"; text: string; author?: string }
+  | {
+      id?: string;
+      type: "note";
+      title: string;
+      body: string;
+      font?: "serif" | "sans" | "script";
+      bg?: "cream" | "beige" | "blush" | "white";
+    }
+  | {
+      id?: string;
+      type: "link";
+      url: string;
+      title?: string;
+      description?: string;
+      thumbnail?: string;
+    };
 
 export type Board = {
   id: string;
