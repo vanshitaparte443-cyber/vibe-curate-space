@@ -44,7 +44,7 @@ export const Route = createFileRoute("/board/$boardId")({
 });
 
 function BoardWorkspace() {
-  const { board } = Route.useLoaderData();
+  const { board } = Route.useLoaderData() as { board: import("@/lib/boards-data").Board };
 
   return (
     <div className="min-h-screen bg-background">
