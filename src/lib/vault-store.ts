@@ -21,10 +21,18 @@ type VaultState = {
     string,
     Partial<Pick<Board, "title" | "description" | "tags">>
   >;
+  favorites: string[];
+  recents: string[]; // most-recent first
 };
 
 const STORAGE_KEY = "vv-vault-v1";
-const empty: VaultState = { userBoards: [], userItems: {}, boardOverrides: {} };
+const empty: VaultState = {
+  userBoards: [],
+  userItems: {},
+  boardOverrides: {},
+  favorites: [],
+  recents: [],
+};
 
 let state: VaultState = empty;
 let initialized = false;
@@ -40,6 +48,8 @@ function load(): VaultState {
       userBoards: parsed.userBoards ?? [],
       userItems: parsed.userItems ?? {},
       boardOverrides: parsed.boardOverrides ?? {},
+      favorites: parsed.favorites ?? [],
+      recents: parsed.recents ?? [],
     };
   } catch {
     return empty;
