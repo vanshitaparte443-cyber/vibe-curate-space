@@ -266,3 +266,55 @@ export function getMergedBoard(id: string): Board | undefined {
 export function isUserBoard(id: string): boolean {
   return state.userBoards.some((b) => b.id === id);
 }
+
+// ---- Favorites ----
+export function toggleFavorite(id: string) {
+  update((s) => {
+    const has = s.favorites.includes(id);
+    return {
+      ...s,
+      favorites: has ? s.favorites.filter((x) => x !== id) : [id, ...s.favorites],
+    };
+  });
+}
+export function isFavorite(id: string): boolean {
+  ensureInit();
+  return state.favorites.includes(id);
+}
+
+// ---- Recently viewed ----
+const RECENTS_LIMIT = 12;
+export function trackRecent(id: string) {
+  update((s) => ({
+    ...s,
+    recents: [id, ...s.recents.filter((x) => x !== id)].slice(0, RECENTS_LIMIT),
+  }));
+}
+
+// ---- Search across boards + items ----
+export function searchBoards(query: string): Board[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return getMergedBoards().filter((b) => {
+    if (b.title.toLowerCase().includes(q)) return true;
+    if (b.description.toLowerCase().includes(q)) return true;
+    if (b.tags.some((t) => t.toLowerCase().includes(q))) return true;
+    return b.items.some((it) => {
+      if (it.type === "note") {
+        return (
+          it.title.toLowerCase().includes(q) || it.body.toLowerCase().includes(q)
+        );
+      }
+      if (it.type === "quote") return it.text.toLowerCase().includes(q);
+      if (it.type === "image")
+        return (it.caption ?? "").toLowerCase().includes(q) || it.alt.toLowerCase().includes(q);
+      if (it.type === "link")
+        return (
+          (it.title ?? "").toLowerCase().includes(q) ||
+          (it.description ?? "").toLowerCase().includes(q) ||
+          it.url.toLowerCase().includes(q)
+        );
+      return false;
+    });
+  });
+}
