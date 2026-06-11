@@ -1,16 +1,52 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import type { Board } from "@/lib/boards-data";
+import { Heart, Sparkles } from "lucide-react";
+import { isFavorite, toggleFavorite, useVault } from "@/lib/vault-store";
 
-export function BoardCard({ board, index }: { board: Board; index: number }) {
+export function BoardCard({
+  board,
+  index,
+  variant = "user",
+}: {
+  board: Board;
+  index: number;
+  variant?: "user" | "demo";
+}) {
+  useVault();
+  const fav = isFavorite(board.id);
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8, scale: 0.97 }}
       transition={{ duration: 0.55, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6 }}
-      className="group"
+      className="group relative"
     >
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleFavorite(board.id);
+        }}
+        aria-label={fav ? "Remove from favorites" : "Add to favorites"}
+        className={
+          "absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition " +
+          (fav
+            ? "bg-foreground text-background shadow-lift"
+            : "bg-card/85 text-foreground/70 opacity-0 shadow-soft hover:text-foreground group-hover:opacity-100")
+        }
+      >
+        <Heart className={"h-4 w-4 " + (fav ? "fill-current" : "")} />
+      </button>
+
+      {variant === "demo" && (
+        <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-foreground/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-background backdrop-blur">
+          <Sparkles className="h-2.5 w-2.5" /> Inspiration
+        </span>
+      )}
+
       <Link
         to="/board/$boardId"
         params={{ boardId: board.id }}

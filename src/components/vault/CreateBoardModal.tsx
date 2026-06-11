@@ -4,7 +4,27 @@ import { X, Plus, Sparkles } from "lucide-react";
 import { createBoard } from "@/lib/vault-store";
 import { useNavigate } from "@tanstack/react-router";
 
-const CATEGORIES = ["Fashion", "Interior", "Study", "Travel", "Branding", "Personal"];
+const CATEGORIES = [
+  "Fashion",
+  "Interior Design",
+  "Study",
+  "Travel",
+  "Branding",
+  "Photography",
+  "Art",
+  "Architecture",
+  "Food",
+  "Fitness",
+  "Productivity",
+  "Personal Growth",
+  "UI/UX Design",
+  "Graphic Design",
+  "Business",
+  "Career",
+  "Vision Boards",
+  "Social Media",
+  "Content Creation",
+];
 
 export function CreateBoardModal({
   open,
