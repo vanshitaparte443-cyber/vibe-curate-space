@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Share2,
@@ -19,6 +19,7 @@ import {
   useVault,
   deleteItem,
   updateBoardMeta,
+  trackRecent,
 } from "@/lib/vault-store";
 import { Fab } from "@/components/vault/Fab";
 import { AddItemModal, type AddMode } from "@/components/vault/AddItemModal";
@@ -61,6 +62,10 @@ function BoardWorkspace() {
   useVault();
   const { boardId } = Route.useLoaderData() as { boardId: string };
   const board = getMergedBoard(boardId);
+
+  useEffect(() => {
+    if (board) trackRecent(board.id);
+  }, [board?.id]);
 
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
