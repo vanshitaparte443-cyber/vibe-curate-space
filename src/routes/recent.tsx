@@ -9,7 +9,7 @@ import { getMergedBoards, useVault } from "@/lib/vault-store";
 import { boards as seedBoards } from "@/lib/boards-data";
 
 export const Route = createFileRoute("/recent")({
-  head: () => ({ meta: [{ title: "Recent — VibeVault" }] }),
+  head: () => ({ meta: [{ title: "Recent — MuseBoard" }] }),
   component: RecentPage,
 });
 

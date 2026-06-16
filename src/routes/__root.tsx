@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VibeVault — Collect Ideas. Curate Aesthetics." },
+      { title: "MuseBoard — Collect Ideas. Curate Aesthetics." },
       { name: "description", content: "Create beautiful mood boards for fashion, interiors, study inspiration, travel, and branding." },
-      { name: "author", content: "VibeVault" },
-      { property: "og:title", content: "VibeVault — Collect Ideas. Curate Aesthetics." },
+      { name: "author", content: "MuseBoard" },
+      { property: "og:title", content: "MuseBoard — Collect Ideas. Curate Aesthetics." },
       { property: "og:description", content: "Create beautiful mood boards for fashion, interiors, study inspiration, travel, and branding." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

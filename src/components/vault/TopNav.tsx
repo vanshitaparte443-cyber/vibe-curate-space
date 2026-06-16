@@ -18,7 +18,7 @@ export function TopNav({ compact = false }: { compact?: boolean }) {
           <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-secondary to-primary text-primary-foreground shadow-soft">
             <span className="font-display text-base leading-none">V</span>
           </span>
-          <span className="font-display text-xl tracking-tight">VibeVault</span>
+          <span className="font-display text-xl tracking-tight">MuseBoard</span>
         </Link>
 
         {!compact && (

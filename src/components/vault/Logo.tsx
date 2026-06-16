@@ -16,7 +16,7 @@ export function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <span className="pointer-events-none absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
       </span>
       <span className={"font-display tracking-tight text-foreground " + wordCls}>
-        VibeVault
+        MuseBoard
       </span>
     </Link>
   );

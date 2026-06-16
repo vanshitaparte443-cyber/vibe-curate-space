@@ -65,7 +65,7 @@
 
 :root {
   --radius: 1rem;
-  /* VibeVault palette — light */
+  /* MuseBoard palette — light */
   --background: oklch(0.972 0.012 80);       /* #FAF7F2 */
   --foreground: oklch(0.265 0 0);            /* #2B2B2B */
   --card: oklch(1 0 0);                      /* #FFFFFF */
@@ -105,7 +105,7 @@
 }
 
 .dark {
-  /* VibeVault palette — dark */
+  /* MuseBoard palette — dark */
   --background: oklch(0.18 0.005 260);       /* #111315 */
   --foreground: oklch(0.965 0 0);            /* #F5F5F5 */
   --card: oklch(0.235 0.005 260);            /* #1B1D22 */

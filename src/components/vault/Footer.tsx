@@ -33,7 +33,7 @@ export function Footer() {
           ]} />
         </div>
         <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-border/50 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} VibeVault. Designed with care.</p>
+          <p>© {new Date().getFullYear()} MuseBoard. Designed with care.</p>
           <p className="italic">For the quiet collectors of beautiful things.</p>
         </div>
       </div>

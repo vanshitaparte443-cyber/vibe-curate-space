@@ -14,7 +14,7 @@ import { CATEGORIES, matchesCategory } from "@/lib/categories";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "VibeVault — Collect Ideas. Curate Aesthetics." },
+      { title: "MuseBoard — Collect Ideas. Curate Aesthetics." },
       { name: "description", content: "A premium mood board space for fashion, interiors, study inspiration, travel, and branding." },
     ],
   }),
@@ -109,7 +109,7 @@ function Dashboard() {
           <Section
             id="inspiration"
             title="Inspiration collections"
-            kicker="Curated by VibeVault"
+            kicker="Curated by MuseBoard"
             Icon={Sparkles}
             actionTo="/explore"
             actionLabel="Explore all"
