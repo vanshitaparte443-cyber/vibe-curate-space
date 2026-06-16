@@ -16,7 +16,7 @@ export const Route = createFileRoute("/explore")({
   validateSearch: (s: Record<string, unknown>): ExploreSearch => ({
     category: typeof s.category === "string" ? s.category : undefined,
   }),
-  head: () => ({ meta: [{ title: "Explore — VibeVault" }] }),
+  head: () => ({ meta: [{ title: "Explore — MuseBoard" }] }),
   component: ExplorePage,
 });
 

@@ -9,7 +9,7 @@ import { getMergedBoards, useVault, searchBoards } from "@/lib/vault-store";
 import { boards as seedBoards } from "@/lib/boards-data";
 
 export const Route = createFileRoute("/favorites")({
-  head: () => ({ meta: [{ title: "Favorites — VibeVault" }] }),
+  head: () => ({ meta: [{ title: "Favorites — MuseBoard" }] }),
   component: FavoritesPage,
 });
 

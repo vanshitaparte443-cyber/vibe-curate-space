@@ -34,15 +34,15 @@ export const Route = createFileRoute("/board/$boardId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.board?.title ?? "Board"} — VibeVault` },
-          { name: "description", content: loaderData.board?.description ?? "A mood board on VibeVault." },
-          { property: "og:title", content: `${loaderData.board?.title ?? "Board"} — VibeVault` },
-          { property: "og:description", content: loaderData.board?.description ?? "A mood board on VibeVault." },
+          { title: `${loaderData.board?.title ?? "Board"} — MuseBoard` },
+          { name: "description", content: loaderData.board?.description ?? "A mood board on MuseBoard." },
+          { property: "og:title", content: `${loaderData.board?.title ?? "Board"} — MuseBoard` },
+          { property: "og:description", content: loaderData.board?.description ?? "A mood board on MuseBoard." },
           ...(loaderData.board?.covers?.[0]
             ? [{ property: "og:image", content: loaderData.board.covers[0] }]
             : []),
         ]
-      : [{ title: "Board — VibeVault" }],
+      : [{ title: "Board — MuseBoard" }],
   }),
   component: BoardWorkspace,
   notFoundComponent: () => (

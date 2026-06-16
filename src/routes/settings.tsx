@@ -9,7 +9,7 @@ import { boards as seedBoards } from "@/lib/boards-data";
 import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — VibeVault" }] }),
+  head: () => ({ meta: [{ title: "Settings — MuseBoard" }] }),
   component: SettingsPage,
 });
 
@@ -62,9 +62,9 @@ function SettingsPage() {
         </div>
 
         <div className="mt-6 glass rounded-3xl p-6 shadow-soft sm:p-8">
-          <h3 className="font-display text-xl text-foreground">About VibeVault</h3>
+          <h3 className="font-display text-xl text-foreground">About MuseBoard</h3>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            VibeVault is a quiet space for the collectors of beautiful things. Build
+            MuseBoard is a quiet space for the collectors of beautiful things. Build
             mood boards for fashion, interiors, study, travel, branding, and everything
             in between. Designed to feel like a magazine, organized like an app.
           </p>

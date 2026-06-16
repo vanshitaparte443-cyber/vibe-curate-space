@@ -9,7 +9,7 @@ import { getMergedBoards, useVault, searchBoards } from "@/lib/vault-store";
 import { boards as seedBoards } from "@/lib/boards-data";
 
 export const Route = createFileRoute("/boards")({
-  head: () => ({ meta: [{ title: "My Boards — VibeVault" }] }),
+  head: () => ({ meta: [{ title: "My Boards — MuseBoard" }] }),
   component: MyBoardsPage,
 });
 
