@@ -8,6 +8,9 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <Logo />
+            <p className="text-sm font-medium italic text-foreground/80">
+              Where Ideas Become Visual.
+            </p>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
               A quiet space for the collectors of beautiful things. Build mood boards
               that look like they belong in a magazine.
@@ -33,7 +36,7 @@ export function Footer() {
           ]} />
         </div>
         <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-border/50 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} MuseBoard. Designed with care.</p>
+          <p>© {new Date().getFullYear()} MuseBoard — Where Ideas Become Visual.</p>
           <p className="italic">For the quiet collectors of beautiful things.</p>
         </div>
       </div>

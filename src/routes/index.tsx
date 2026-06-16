@@ -168,12 +168,12 @@ function Hero({ onCreate }: { onCreate: () => void }) {
             Your aesthetic, organized
           </span>
           <h1 className="mt-5 font-display text-4xl leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            Welcome back.<br />
-            <span className="italic text-foreground/85">Curate something beautiful.</span>
+            Collect Ideas.<br />
+            <span className="italic text-foreground/85">Curate Inspiration.</span>
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Create mood boards for fashion, interiors, study, travel, branding —
-            everything in between. A calm space to think in pictures.
+            Create beautiful mood boards, organize creative ideas, and bring your
+            vision to life in one elegant workspace.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <motion.button
