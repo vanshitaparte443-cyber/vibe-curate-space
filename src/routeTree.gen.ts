@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RecentRouteImport } from './routes/recent'
 import { Route as FavoritesRouteImport } from './routes/favorites'
@@ -17,6 +18,11 @@ import { Route as BoardsRouteImport } from './routes/boards'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoardBoardIdRouteImport } from './routes/board.$boardId'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/board/$boardId': typeof BoardBoardIdRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/board/$boardId': typeof BoardBoardIdRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/board/$boardId': typeof BoardBoardIdRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/recent'
     | '/settings'
+    | '/signup'
     | '/board/$boardId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/recent'
     | '/settings'
+    | '/signup'
     | '/board/$boardId'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/recent'
     | '/settings'
+    | '/signup'
     | '/board/$boardId'
   fileRoutesById: FileRoutesById
 }
@@ -118,11 +130,19 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   RecentRoute: typeof RecentRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   BoardBoardIdRoute: typeof BoardBoardIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   RecentRoute: RecentRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   BoardBoardIdRoute: BoardBoardIdRoute,
 }
 export const routeTree = rootRouteImport
