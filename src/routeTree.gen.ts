@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RecentRouteImport } from './routes/recent'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as BoardsRouteImport } from './routes/boards'
@@ -31,6 +32,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const RecentRoute = RecentRouteImport.update({
   id: '/recent',
   path: '/recent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoritesRoute = FavoritesRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/boards': typeof BoardsRoute
   '/explore': typeof ExploreRoute
   '/favorites': typeof FavoritesRoute
+  '/login': typeof LoginRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/boards': typeof BoardsRoute
   '/explore': typeof ExploreRoute
   '/favorites': typeof FavoritesRoute
+  '/login': typeof LoginRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/boards': typeof BoardsRoute
   '/explore': typeof ExploreRoute
   '/favorites': typeof FavoritesRoute
+  '/login': typeof LoginRoute
   '/recent': typeof RecentRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/boards'
     | '/explore'
     | '/favorites'
+    | '/login'
     | '/recent'
     | '/settings'
     | '/signup'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/boards'
     | '/explore'
     | '/favorites'
+    | '/login'
     | '/recent'
     | '/settings'
     | '/signup'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/boards'
     | '/explore'
     | '/favorites'
+    | '/login'
     | '/recent'
     | '/settings'
     | '/signup'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   BoardsRoute: typeof BoardsRoute
   ExploreRoute: typeof ExploreRoute
   FavoritesRoute: typeof FavoritesRoute
+  LoginRoute: typeof LoginRoute
   RecentRoute: typeof RecentRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
@@ -155,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/recent'
       fullPath: '/recent'
       preLoaderRoute: typeof RecentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   BoardsRoute: BoardsRoute,
   ExploreRoute: ExploreRoute,
   FavoritesRoute: FavoritesRoute,
+  LoginRoute: LoginRoute,
   RecentRoute: RecentRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
