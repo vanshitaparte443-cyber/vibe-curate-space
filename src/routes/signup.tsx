@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signUp } from "@/lib/auth";
+import { useAuth } from "@/lib/useAuth";
 
 export const Route = createFileRoute("/signup")({
   component: SignupPage,
@@ -9,32 +10,45 @@ export const Route = createFileRoute("/signup")({
 function SignupPage() {
   const navigate = useNavigate();
 
+  const { user, loading } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: "/boards" });
+    }
+  }, [user, loading, navigate]);
 
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ) {
     e.preventDefault();
 
-    setLoading(true);
+    setBtnLoading(true);
     setMessage("");
 
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(
+      email.trim(),
+      password
+    );
 
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage("Account created successfully.");
+      setMessage(
+        "Account created successfully 🚀 Check your email to verify your account, then log in."
+      );
 
       setTimeout(() => {
-        navigate({ to: "/" });
-      }, 2000);
+        navigate({ to: "/login" });
+      }, 2500);
     }
 
-    setLoading(false);
+    setBtnLoading(false);
   }
 
   return (
@@ -48,13 +62,18 @@ function SignupPage() {
           Join MuseBoard and save your inspiration.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
           <input
             type="email"
             placeholder="Email"
             className="w-full rounded-xl border p-3"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             required
           />
 
@@ -63,21 +82,25 @@ function SignupPage() {
             placeholder="Password"
             className="w-full rounded-xl border p-3"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
             required
           />
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={btnLoading}
             className="w-full rounded-xl bg-black text-white p-3"
           >
-            {loading ? "Creating..." : "Create Account"}
+            {btnLoading
+              ? "Creating..."
+              : "Create Account"}
           </button>
         </form>
 
         {message && (
-          <p className="mt-4 text-sm">
+          <p className="mt-4 text-sm text-center">
             {message}
           </p>
         )}

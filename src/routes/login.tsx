@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "@/lib/auth";
+import { useAuthStore } from "@/lib/auth-store";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -8,15 +9,23 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { user, loading } = useAuthStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: "/boards" });
+    }
+  }, [user, loading]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
+
+    setLoadingBtn(true);
     setMessage("");
 
     const { error } = await signIn(email, password);
@@ -25,56 +34,36 @@ function LoginPage() {
       setMessage(error.message);
     } else {
       setMessage("Welcome back 🎉");
-
-      setTimeout(() => {
-        navigate({ to: "/boards" }); // or "/" if you prefer
-      }, 1000);
+      navigate({ to: "/boards" });
     }
 
-    setLoading(false);
+    setLoadingBtn(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-3xl border bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold mb-2">Welcome back</h1>
+    <div className="min-h-screen flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="space-y-4 w-80">
+        <input
+          className="w-full border p-2"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <p className="text-sm text-gray-500 mb-6">
-          Log in to continue your inspiration.
-        </p>
+        <input
+          className="w-full border p-2"
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full rounded-xl border p-3"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <button disabled={loadingBtn} className="w-full bg-black text-white p-2">
+          {loadingBtn ? "Logging in..." : "Login"}
+        </button>
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full rounded-xl border p-3"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-black text-white p-3"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        {message && (
-          <p className="mt-4 text-sm">{message}</p>
-        )}
-      </div>
+        {message && <p>{message}</p>}
+      </form>
     </div>
   );
 }

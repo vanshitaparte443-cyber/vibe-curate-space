@@ -75,7 +75,7 @@ export function CreateBoardModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 grid place-items-center px-4"
+          className="fixed inset-0 z-50 overflow-y-auto p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -92,7 +92,7 @@ export function CreateBoardModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="glass relative z-10 w-full max-w-lg overflow-hidden rounded-3xl shadow-lift"
+            className="glass relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl shadow-lift"
           >
             <div className="relative px-7 pt-7">
               <button

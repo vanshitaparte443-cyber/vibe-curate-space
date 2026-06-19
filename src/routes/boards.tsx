@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
@@ -7,23 +7,25 @@ import { BoardCard } from "@/components/vault/BoardCard";
 import { Footer } from "@/components/vault/Footer";
 import { CreateBoardModal } from "@/components/vault/CreateBoardModal";
 
-import { getMergedBoards, useVault, searchBoards } from "@/lib/vault-store";
+import {
+  getMergedBoards,
+  useVault,
+  searchBoards,
+} from "@/lib/vault-store";
 import { boards as seedBoards } from "@/lib/boards-data";
 
-import { RequireAuth } from "@/lib/RequireAuth";
+// 🔐 ADD THIS
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const Route = createFileRoute("/boards")({
   head: () => ({ meta: [{ title: "My Boards — MuseBoard" }] }),
-  component: BoardsRoute,
-});
 
-function BoardsRoute() {
-  return (
-    <RequireAuth>
+  component: () => (
+    <ProtectedRoute>
       <MyBoardsPage />
-    </RequireAuth>
-  );
-}
+    </ProtectedRoute>
+  ),
+});
 
 function MyBoardsPage() {
   useVault();
@@ -32,7 +34,12 @@ function MyBoardsPage() {
   const [search, setSearch] = useState("");
 
   const all = getMergedBoards();
-  const seedIds = useMemo(() => new Set(seedBoards.map((b) => b.id)), []);
+
+  const seedIds = useMemo(
+    () => new Set(seedBoards.map((b) => b.id)),
+    []
+  );
+
   const mine = all.filter((b) => !seedIds.has(b.id));
 
   const filtered = search.trim()
@@ -55,13 +62,14 @@ function MyBoardsPage() {
               My Boards
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {mine.length} personal {mine.length === 1 ? "board" : "boards"}
+              {mine.length} personal{" "}
+              {mine.length === 1 ? "board" : "boards"}
             </p>
           </div>
 
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-medium text-background shadow-lift transition hover:bg-foreground/90"
+            className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-medium text-background"
           >
             <Plus className="h-4 w-4" /> New Board
           </button>
@@ -69,34 +77,34 @@ function MyBoardsPage() {
 
         <div className="mt-10">
           {filtered.length === 0 ? (
-            <div className="glass mx-auto grid max-w-xl place-items-center rounded-3xl px-8 py-16 text-center shadow-soft">
+            <div className="glass mx-auto grid max-w-xl place-items-center rounded-3xl px-8 py-16 text-center">
               <p className="font-display text-2xl text-foreground">
                 {search ? "No matches." : "No personal boards yet."}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                {search ? "Try a different word." : "Create a board to start collecting."}
+                {search
+                  ? "Try a different word."
+                  : "Create a board to start collecting."}
               </p>
 
               {!search && (
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-lift transition hover:bg-foreground/90"
+                  className="mt-6 rounded-full bg-foreground px-5 py-2.5 text-sm text-background"
                 >
-                  <Plus className="h-4 w-4" /> Create board
+                  Create board
                 </button>
               )}
-
-              <Link
-                to="/explore"
-                className="mt-3 text-xs text-muted-foreground underline-offset-4 hover:underline"
-              >
-                or explore inspiration collections
-              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((b, i) => (
-                <BoardCard key={b.id} board={b} index={i} variant="user" />
+                <BoardCard
+                  key={b.id}
+                  board={b}
+                  index={i}
+                  variant="user"
+                />
               ))}
             </div>
           )}
@@ -104,7 +112,10 @@ function MyBoardsPage() {
       </section>
 
       <Footer />
-      <CreateBoardModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <CreateBoardModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </AppShell>
   );
 }

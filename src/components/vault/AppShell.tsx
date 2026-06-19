@@ -18,6 +18,7 @@ import {
 import { Logo } from "./Logo";
 import { useTheme } from "@/lib/theme";
 import { getMergedBoards, useVault } from "@/lib/vault-store";
+import { useAuthStore } from "@/lib/auth-store";
 
 const NAV = [
   { to: "/", label: "Dashboard", Icon: LayoutDashboard },
@@ -148,17 +149,28 @@ function SidebarBody({
 }
 
 function ProfileCard({ count }: { count: number }) {
+  const { user } = useAuthStore();
+
+  const email = user?.email ?? "Guest";
+  const initial = email.charAt(0).toUpperCase();
+
   return (
     <Link
       to="/settings"
       className="glass mt-6 flex items-center gap-3 rounded-2xl p-3 transition hover:shadow-soft"
     >
       <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary/80 to-secondary font-display text-sm text-primary-foreground shadow-soft">
-        A
+        {initial}
       </div>
+
       <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-foreground">Anonymous Curator</p>
-        <p className="truncate text-[11px] text-muted-foreground">{count} boards · sign in soon</p>
+        <p className="truncate text-sm font-medium text-foreground">
+          {email}
+        </p>
+
+        <p className="truncate text-[11px] text-muted-foreground">
+          {count} boards
+        </p>
       </div>
     </Link>
   );
@@ -174,6 +186,7 @@ function Topbar({
   onSearchChange?: (v: string) => void;
 }) {
   const { theme, toggle } = useTheme();
+  const { user } = useAuthStore();
   return (
     <motion.header
       initial={{ y: -12, opacity: 0 }}
@@ -217,7 +230,7 @@ function Topbar({
             aria-label="Account"
             className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary/80 to-secondary font-display text-sm text-primary-foreground shadow-soft"
           >
-            A
+            {user?.email?.charAt(0).toUpperCase() || "G"}
           </div>
         </div>
       </div>
