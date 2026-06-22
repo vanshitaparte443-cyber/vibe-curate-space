@@ -1,110 +1,121 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { signUp } from "@/lib/auth";
 import { useAuth } from "@/lib/useAuth";
+import { AuthLayout } from "@/components/AuthLayout";
 
 export const Route = createFileRoute("/signup")({
-  component: SignupPage,
+component: SignupPage,
 });
 
 function SignupPage() {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const { user, loading } = useAuth();
+const { user, loading } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [btnLoading, setBtnLoading] = useState(false);
-  const [message, setMessage] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [btnLoading, setBtnLoading] = useState(false);
+const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    if (!loading && user) {
-      navigate({ to: "/boards" });
-    }
-  }, [user, loading, navigate]);
+useEffect(() => {
+if (!loading && user) {
+navigate({ to: "/boards" });
+}
+}, [user, loading, navigate]);
 
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
-    e.preventDefault();
+async function handleSubmit(
+e: React.FormEvent<HTMLFormElement>
+) {
+e.preventDefault();
 
-    setBtnLoading(true);
-    setMessage("");
 
-    const { error } = await signUp(
-      email.trim(),
-      password
-    );
+setBtnLoading(true);
+setMessage("");
 
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage(
-        "Account created successfully 🚀 Check your email to verify your account, then log in."
-      );
+const { error } = await signUp(
+  email.trim(),
+  password
+);
 
-      setTimeout(() => {
-        navigate({ to: "/login" });
-      }, 2500);
-    }
-
-    setBtnLoading(false);
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-3xl border bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold mb-2">
-          Create Account
-        </h1>
-
-        <p className="text-sm text-gray-500 mb-6">
-          Join MuseBoard and save your inspiration.
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full rounded-xl border p-3"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full rounded-xl border p-3"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={btnLoading}
-            className="w-full rounded-xl bg-black text-white p-3"
-          >
-            {btnLoading
-              ? "Creating..."
-              : "Create Account"}
-          </button>
-        </form>
-
-        {message && (
-          <p className="mt-4 text-sm text-center">
-            {message}
-          </p>
-        )}
-      </div>
-    </div>
+if (error) {
+  setMessage(error.message);
+} else {
+  setMessage(
+    "Account created successfully 🚀 Check your email to verify your account."
   );
+
+  setTimeout(() => {
+    navigate({ to: "/login" });
+  }, 2500);
+}
+
+setBtnLoading(false);
+
+
+}
+
+return ( <AuthLayout
+   title="Create Your Account"
+   subtitle="Join MuseBoard and start collecting inspiration."
+ > <form
+     onSubmit={handleSubmit}
+     className="space-y-5"
+   > <div> <label className="mb-2 block text-sm font-medium">
+Email </label>
+
+
+      <input
+        type="email"
+        placeholder="you@example.com"
+        className="w-full rounded-2xl border border-border bg-background/70 p-3 outline-none transition focus:border-primary"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+    </div>
+
+    <div>
+      <label className="mb-2 block text-sm font-medium">
+        Password
+      </label>
+
+      <input
+        type="password"
+        placeholder="Create a password"
+        className="w-full rounded-2xl border border-border bg-background/70 p-3 outline-none transition focus:border-primary"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+    </div>
+
+    <button
+      type="submit"
+      disabled={btnLoading}
+      className="w-full rounded-2xl bg-black p-3 text-white transition hover:opacity-90"
+    >
+      {btnLoading ? "Creating..." : "Create Account"}
+    </button>
+
+    {message && (
+      <p className="text-center text-sm text-muted-foreground">
+        {message}
+      </p>
+    )}
+
+    <p className="text-center text-sm text-muted-foreground">
+      Already have an account?{" "}
+      <Link
+        to="/login"
+        className="font-medium text-foreground hover:underline"
+      >
+        Sign in
+      </Link>
+    </p>
+  </form>
+</AuthLayout>
+
+
+);
 }
