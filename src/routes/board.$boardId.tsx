@@ -128,23 +128,103 @@ function BoardWorkspace() {
   return (
     <div className="min-h-screen bg-background">
       <TopNav compact />
-
-      <div className="flex items-center justify-between p-4 border-b">
-        <Link to="/">← Back</Link>
-
-        <button onClick={copyShareLink}>
-          <Share2 /> Share
-        </button>
+  
+      {/* TOP BAR */}
+  
+      <div className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link
+            to="/boards"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Link>
+  
+          <button
+            onClick={copyShareLink}
+            className="inline-flex items-center gap-2 rounded-xl border border-border/60 px-4 py-2 text-sm"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+        </div>
       </div>
-
-      <section className="p-6">
-        <h1 className="text-3xl font-bold">
-          {board.title}
-        </h1>
+  
+      {/* BOARD HEADER */}
+  
+      <section className="border-b border-border/60 px-8 py-8">
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+              Inspiration Board
+            </p>
+  
+            <h1 className="mt-2 font-display text-5xl text-foreground">
+              {board.title}
+            </h1>
+  
+            <p className="mt-3 max-w-2xl text-muted-foreground">
+              {board.description}
+            </p>
+  
+            <div className="mt-5 flex gap-6 text-sm text-muted-foreground">
+              <span>{board.itemCount} items</span>
+              <span>{board.tags.length} tags</span>
+              <span>Updated recently</span>
+            </div>
+  
+            <div className="mt-4 flex flex-wrap gap-2">
+              {board.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-border/60 px-3 py-1 text-xs"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+  
+          <div className="flex gap-2">
+            <button
+              onClick={copyShareLink}
+              className="rounded-xl border border-border/60 px-4 py-2"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+  
+            <button className="rounded-xl border border-border/60 px-4 py-2">
+              <Download className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       </section>
-
+  
+      {/* MASONRY GRID */}
+  
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
+          <AnimatePresence>
+            {board.items.map((item, index) => (
+              <MasonryItem
+                key={item.id ?? index}
+                item={item}
+                index={index}
+                onEdit={() => openEdit(item)}
+                onDelete={() => {
+                  if (item.id) {
+                    deleteItem(board.id, item.id);
+                  }
+                }}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+      </section>
+  
       <Fab onPick={openAdd} />
-
+  
       <AddItemModal
         open={addOpen}
         mode={addMode}
@@ -153,8 +233,8 @@ function BoardWorkspace() {
           setAddOpen(false);
           setEditingItem(null);
         }}
-        editItem={editingItem ?? undefined}
+        editItem={editingItem ?? undefined}     
       />
-    </div>
-  );
+  </div>
+);
 }

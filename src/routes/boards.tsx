@@ -53,38 +53,71 @@ function MyBoardsPage() {
       onSearchChange={setSearch}
     >
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-              Your vault
-            </p>
-            <h1 className="mt-1 font-display text-3xl text-foreground sm:text-4xl">
-              My Boards
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {mine.length} personal{" "}
-              {mine.length === 1 ? "board" : "boards"}
-            </p>
-          </div>
+      <div className="rounded-[32px] border border-border/60 bg-card/50 p-8 backdrop-blur">
+  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+    Your Workspace
+  </p>
 
-          <button
-            onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-medium text-background"
-          >
-            <Plus className="h-4 w-4" /> New Board
-          </button>
-        </div>
+  <h1 className="mt-2 font-display text-4xl text-foreground sm:text-5xl">
+    My Boards
+  </h1>
+
+  <p className="mt-3 max-w-2xl text-muted-foreground">
+    Organize inspiration, collect ideas and build beautiful moodboards
+    for your projects.
+  </p>
+
+  <div className="mt-8 grid gap-4 sm:grid-cols-3">
+     <div className="rounded-2xl border border-border/60 bg-background/60 p-5">
+       <p className="text-xs uppercase tracking-wide text-muted-foreground">
+        Total Boards
+       </p>
+       <p className="mt-2 text-3xl font-bold">
+        {mine.length}
+       </p>
+     </div>
+
+     <div className="rounded-2xl border border-border/60 bg-background/60 p-5">
+       <p className="text-xs uppercase tracking-wide text-muted-foreground">
+         Categories
+       </p>
+       <p className="mt-2 text-3xl font-bold">
+         {new Set(mine.flatMap((b) => b.tags)).size}
+       </p>
+     </div>
+
+     <div className="rounded-2xl border border-border/60 bg-background/60 p-5">
+       <p className="text-xs uppercase tracking-wide text-muted-foreground">
+         Inspiration Items
+       </p>
+       <p className="mt-2 text-3xl font-bold">
+         {mine.reduce((acc, b) => acc + b.itemCount, 0)}
+       </p>
+    </div>
+  </div>
+
+  <button
+    onClick={() => setModalOpen(true)}
+    className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background"
+  >
+    <Plus className="h-4 w-4" />
+    Create New Board
+  </button>
+</div>
 
         <div className="mt-10">
           {filtered.length === 0 ? (
             <div className="glass mx-auto grid max-w-xl place-items-center rounded-3xl px-8 py-16 text-center">
               <p className="font-display text-2xl text-foreground">
-                {search ? "No matches." : "No personal boards yet."}
+                {search
+                 ? "No matches found"
+                 : "Your inspiration journey starts here ✨"}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 {search
-                  ? "Try a different word."
-                  : "Create a board to start collecting."}
+                  ? "Try a different keyword"
+                  : "Create your first board and start saving ideas, references and inspiration."}
+              
               </p>
 
               {!search && (
