@@ -30,24 +30,32 @@ export function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 }
 
 function MBMark() {
-  // Refined geometric MB monogram — M and B share a baseline and stem
+  // Concept 1: The Curated Frame — An elegant serif M inside an arched gallery frame
   return (
     <svg
       viewBox="0 0 32 32"
-      className="h-[58%] w-[58%]"
+      className="h-[62%] w-[62%]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2.4}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
     >
-      {/* M */}
-      <path d="M4 24 V8 L10.5 17 L17 8 V24" />
-      {/* B stem + bowls */}
-      <path d="M20 8 V24" />
-      <path d="M20 8 H24 A4 4 0 0 1 24 16 H20" />
-      <path d="M20 16 H25 A4 4 0 0 1 25 24 H20" />
+      {/* Arched Gallery Frame */}
+      <path d="M6 26V12C6 8.68 8.68 6 12 6H20C23.32 6 26 8.68 26 12V26" strokeWidth={1.6} />
+      
+      {/* Serif M Monogram */}
+      {/* Left stem and serif */}
+      <path d="M10 22h3" strokeWidth={1.6} />
+      <path d="M11.5 22V12.5" strokeWidth={2.2} />
+      
+      {/* Right stem and serif */}
+      <path d="M19 22h3" strokeWidth={1.6} />
+      <path d="M20.5 22V12.5" strokeWidth={2.2} />
+      
+      {/* Middle diagonal V connector */}
+      <path d="M11.5 12.5L16 18.5L20.5 12.5" strokeWidth={2.0} />
     </svg>
   );
 }

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Logo } from "./Logo";
 import { Search, Moon, Sun, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/lib/theme";
@@ -23,16 +24,7 @@ export function TopNav({ compact = false }: { compact?: boolean }) {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-5 sm:gap-6 sm:px-8">
 
-        {/* Logo */}
-        <Link to="/" className="group flex shrink-0 items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-secondary to-primary text-primary-foreground shadow-soft">
-            <span className="font-display text-base">V</span>
-          </span>
-
-          <span className="font-display text-xl tracking-tight">
-            MuseBoard
-          </span>
-        </Link>
+        <Logo size="sm" />
 
         {/* Search */}
         {!compact && (
