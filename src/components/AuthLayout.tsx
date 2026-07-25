@@ -94,64 +94,133 @@ const cardVariants = {
   }
 };
 
-function ImageCard({ item }: { item: typeof COLUMN_1[0] }) {
+function ImageCard({ item, index }: { item: typeof COLUMN_1[0]; index: number }) {
+  // Scattered rotation values
+  const rotations = [-2.5, 1.8, -1.2, 2.2, -1.8, 1.5, -2, 2.5];
+  const rotation = rotations[index % rotations.length];
+
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -6, scale: 1.015 }}
-      className="group relative overflow-hidden rounded-[24px] border border-black/5 bg-white p-2.5 shadow-soft transition-all duration-300 hover:shadow-lift"
+      whileHover={{ y: -8, scale: 1.03, rotate: rotation * 0.4 }}
+      style={{ rotate: `${rotation}deg` }}
+      className="group relative overflow-hidden rounded-[4px] border border-stone-200/50 bg-[#faf8f5] p-3 shadow-[0_8px_20px_-6px_rgba(43,34,22,0.12)] transition-shadow duration-300 hover:shadow-[0_20px_35px_-8px_rgba(43,34,22,0.18)]"
     >
-      <div className={`w-full overflow-hidden rounded-[18px] bg-muted/30 ${item.aspect}`}>
+      {/* Washi Tape Accent */}
+      <div 
+        className="absolute -top-1.5 left-1/2 h-3.5 w-12 -translate-x-1/2 bg-amber-100/35 border-x border-dashed border-amber-950/5 backdrop-blur-[0.5px] rotate-[-1deg]" 
+        style={{ mixBlendMode: "multiply" }}
+      />
+
+      <div className={`w-full overflow-hidden border border-stone-100 bg-muted/30 ${item.aspect}`}>
         <img
           src={item.image}
           alt={item.title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="h-full w-full object-cover grayscale-[15%] group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-[1.04]"
           loading="lazy"
         />
       </div>
-      <div className="mt-2.5 px-1.5 pb-0.5 flex items-center justify-between">
-        <p className="text-[12.5px] font-medium tracking-tight text-foreground/80">
+      
+      <div className="mt-3 pb-0.5 text-center">
+        <p className="font-display text-[13px] italic tracking-wide text-stone-700 leading-snug">
           {item.title}
         </p>
-        <span className="rounded-full bg-secondary/60 px-2.5 py-0.5 text-[9.5px] font-semibold tracking-wide text-foreground/50">
+        <p className="mt-0.5 text-[9px] font-bold uppercase tracking-widest text-primary/70">
           {item.category}
-        </span>
+        </p>
       </div>
     </motion.div>
   );
 }
 
-function QuoteCard({ item }: { item: typeof COLUMN_1[1] }) {
+function QuoteCard({ item, index }: { item: typeof COLUMN_1[1]; index: number }) {
+  const rotations = [1.5, -2, 1.2, -1.5];
+  const rotation = rotations[index % rotations.length];
+
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -6, scale: 1.015 }}
-      className="rounded-[24px] border border-amber-200/35 bg-[#fffcf8] p-6 shadow-soft hover:shadow-lift transition-all duration-300"
+      whileHover={{ y: -8, scale: 1.03, rotate: rotation * 0.4 }}
+      style={{ rotate: `${rotation}deg` }}
+      className="group relative rounded-[4px] border border-amber-200/30 bg-[#fffdfa] p-6 shadow-[0_8px_20px_-6px_rgba(43,34,22,0.1)] hover:shadow-[0_20px_35px_-8px_rgba(43,34,22,0.15)] transition-all duration-300"
     >
+      {/* Washi Tape Accent */}
+      <div 
+        className="absolute -top-1.5 left-1/2 h-3.5 w-12 -translate-x-1/2 bg-amber-100/35 border-x border-dashed border-amber-950/5 backdrop-blur-[0.5px] rotate-[2deg]" 
+        style={{ mixBlendMode: "multiply" }}
+      />
+
       <span className="font-display text-3xl text-amber-500/50 leading-none">“</span>
-      <p className="font-display -mt-3 text-[17px] italic leading-relaxed text-amber-950/80">
+      <p className="font-display -mt-3 text-[16px] italic leading-relaxed text-amber-950/80">
         {item.text}
       </p>
-      <p className="mt-3.5 text-[9px] font-bold uppercase tracking-widest text-amber-600/70">
+      <p className="mt-3 text-[9px] font-bold uppercase tracking-widest text-amber-600/70">
         {item.author}
       </p>
     </motion.div>
   );
 }
 
-function StatCard({ item }: { item: typeof COLUMN_2[2] }) {
+function StatCard({ item, index }: { item: typeof COLUMN_2[2]; index: number }) {
+  const rotations = [-1.5, 1.5, -1, 1.2];
+  const rotation = rotations[index % rotations.length];
+
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -6, scale: 1.015 }}
-      className="rounded-[24px] border border-violet-100 bg-[#faf9ff] p-5 shadow-soft hover:shadow-lift transition-all duration-300"
+      whileHover={{ y: -8, scale: 1.03, rotate: rotation * 0.4 }}
+      style={{ rotate: `${rotation}deg` }}
+      className="group relative rounded-[4px] border border-violet-100 bg-[#faf9ff] p-5 shadow-[0_8px_20px_-6px_rgba(43,34,22,0.08)] hover:shadow-[0_20px_35px_-8px_rgba(43,34,22,0.12)] transition-all duration-300"
     >
+      {/* Washi Tape Accent */}
+      <div 
+        className="absolute -top-1.5 left-1/2 h-3.5 w-12 -translate-x-1/2 bg-violet-100/35 border-x border-dashed border-violet-950/5 backdrop-blur-[0.5px] rotate-[-2deg]" 
+        style={{ mixBlendMode: "multiply" }}
+      />
+
       <p className="font-display text-4xl font-semibold tracking-tight text-violet-950">
         {item.count}
       </p>
-      <p className="mt-1.5 text-[10px] font-bold uppercase tracking-widest text-violet-400">
+      <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-violet-400">
         {item.label}
       </p>
+    </motion.div>
+  );
+}
+
+function LeafShadow() {
+  return (
+    <motion.div
+      animate={{
+        x: [0, 6, -3, 0],
+        y: [0, -5, 5, 0],
+        rotate: [0, 0.8, -0.8, 0],
+      }}
+      transition={{
+        duration: 22,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      className="pointer-events-none absolute right-0 top-0 z-0 h-full w-[45%] opacity-[0.05] mix-blend-multiply"
+    >
+      <svg viewBox="0 0 100 100" className="h-full w-full fill-stone-900 blur-[2px]">
+        {/* Main Branch */}
+        <path d="M100 0 C80 15, 60 20, 40 10 C35 8, 30 15, 25 12 C15 7, 10 5, 0 0" />
+        
+        {/* Leaf details */}
+        <path d="M85 5 C88 -2, 92 -4, 90 -10 C85 -5, 80 0, 85 5" />
+        <path d="M72 9 C78 12, 82 8, 80 2 C74 0, 70 4, 72 9" />
+        <path d="M60 14 C65 20, 72 18, 70 11 C65 8, 58 10, 60 14" />
+        <path d="M50 12 C48 4, 42 2, 44 10 C46 16, 52 18, 50 12" />
+        <path d="M38 12 C35 18, 28 20, 30 13 C32 8, 36 8, 38 12" />
+        <path d="M28 11 C24 5, 18 8, 22 14 C26 18, 30 15, 28 11" />
+        
+        {/* Secondary branch details */}
+        <path d="M70 12 C60 25, 45 35, 30 40" />
+        <path d="M58 20 C62 26, 60 32, 54 28 C48 24, 52 18, 58 20" />
+        <path d="M48 25 C42 32, 38 28, 42 22 C46 18, 50 20, 48 25" />
+        <path d="M36 31 C32 38, 28 34, 32 28 C36 24, 40 26, 36 31" />
+      </svg>
     </motion.div>
   );
 }
@@ -167,7 +236,16 @@ export function AuthLayout({
 }) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#faf7f2]">
-      {/* Background Glow Blobs */}
+      {/* Tactile Dotted Grid Overlay */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none opacity-[0.35]"
+        style={{
+          backgroundImage: "radial-gradient(rgba(43, 34, 22, 0.12) 1.2px, transparent 1.2px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+
+      {/* Floating Background Glow Blobs */}
       <motion.div
         animate={{
           scale: [1, 1.15, 1],
@@ -179,7 +257,7 @@ export function AuthLayout({
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute -left-32 -top-32 h-[550px] w-[550px] rounded-full bg-rose-200/25 blur-3xl pointer-events-none"
+        className="absolute -left-32 -top-32 h-[550px] w-[550px] rounded-full bg-rose-200/25 blur-3xl pointer-events-none z-0"
       />
       <motion.div
         animate={{
@@ -193,7 +271,7 @@ export function AuthLayout({
           ease: "easeInOut",
           delay: 1,
         }}
-        className="absolute -right-32 bottom-0 h-[550px] w-[550px] rounded-full bg-violet-200/25 blur-3xl pointer-events-none"
+        className="absolute -right-32 bottom-0 h-[550px] w-[550px] rounded-full bg-violet-200/25 blur-3xl pointer-events-none z-0"
       />
       <motion.div
         animate={{
@@ -207,10 +285,13 @@ export function AuthLayout({
           ease: "easeInOut",
           delay: 2,
         }}
-        className="absolute left-1/3 top-1/3 h-[400px] w-[400px] rounded-full bg-amber-100/20 blur-3xl pointer-events-none"
+        className="absolute left-1/3 top-1/3 h-[400px] w-[400px] rounded-full bg-amber-100/20 blur-3xl pointer-events-none z-0"
       />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-6 py-12 lg:py-16">
+      {/* Cinematic Sunlit Leaf Shadow */}
+      <LeafShadow />
+
+      <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-6 py-12 lg:py-16 z-10">
         {/* LEFT SIDE */}
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center pr-12 xl:pr-16">
           <Logo size="lg" />
@@ -241,9 +322,9 @@ export function AuthLayout({
             <div className="flex w-1/3 flex-col gap-4">
               {COLUMN_1.map((item, idx) =>
                 item.type === "image" ? (
-                  <ImageCard key={idx} item={item as any} />
+                  <ImageCard key={idx} item={item} index={idx} />
                 ) : (
-                  <QuoteCard key={idx} item={item as any} />
+                  <QuoteCard key={idx} item={item} index={idx} />
                 )
               )}
             </div>
@@ -252,9 +333,9 @@ export function AuthLayout({
             <div className="flex w-1/3 flex-col gap-4 pt-10">
               {COLUMN_2.map((item, idx) =>
                 item.type === "image" ? (
-                  <ImageCard key={idx} item={item as any} />
+                  <ImageCard key={idx} item={item} index={idx} />
                 ) : (
-                  <StatCard key={idx} item={item as any} />
+                  <StatCard key={idx} item={item} index={idx} />
                 )
               )}
             </div>
@@ -262,7 +343,7 @@ export function AuthLayout({
             {/* Column 3 */}
             <div className="flex w-1/3 flex-col gap-4">
               {COLUMN_3.map((item, idx) => (
-                <ImageCard key={idx} item={item as any} />
+                <ImageCard key={idx} item={item} index={idx} />
               ))}
             </div>
           </motion.div>
